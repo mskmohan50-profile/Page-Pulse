@@ -32,10 +32,10 @@ app.use(cors({
   origin: [
     "http://localhost:5173",
     "https://page-pulse-black-seven.vercel.app"
-  ]
+  ],
+  methods: ["GET", "POST"],
+  credentials: true,
 }));
-
-
 function parseTargetUrl(raw: unknown): URL | null {
   if (typeof raw !== "string" || raw.trim().length === 0) return null;
   let candidate = raw.trim();
