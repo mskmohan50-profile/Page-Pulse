@@ -7,6 +7,7 @@ const PORT = Number(process.env.PORT ?? 3000);
 const FETCH_TIMEOUT_MS = 10_000;
 const MAX_BODY_BYTES = 5 * 1024 * 1024; 
 
+
 interface AuditReport {
   url: string;
   httpStatus: number;
@@ -27,7 +28,14 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "10kb" }));
 
-/** Validates the incoming string is a well-formed absolute http/https URL. */
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://page-pulse-black-seven.vercel.app"
+  ]
+}));
+
+
 function parseTargetUrl(raw: unknown): URL | null {
   if (typeof raw !== "string" || raw.trim().length === 0) return null;
   let candidate = raw.trim();
@@ -45,7 +53,7 @@ function parseTargetUrl(raw: unknown): URL | null {
   }
 }
 
-/** Fetches a URL with a hard timeout, never throwing past this boundary uncaught. */
+
 async function fetchWithTimeout(url: string, ms: number): Promise<globalThis.Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), ms);
@@ -64,7 +72,6 @@ async function fetchWithTimeout(url: string, ms: number): Promise<globalThis.Res
   }
 }
 
-/** Reads the response body up to a byte cap, so huge pages can't blow up memory. */
 async function readBodyCapped(res: globalThis.Response, capBytes: number): Promise<string> {
   const reader = res.body?.getReader();
   if (!reader) return await res.text();
@@ -197,7 +204,6 @@ app.post(
         message = "The site's SSL certificate could not be verified.";
       }
 
-      // Log full detail server-side, but never leak stack traces to the client.
       console.error(`[audit] failed for ${targetUrl.toString()} after ${responseTimeMs}ms:`, err);
 
       res.status(200).json({ error: message });

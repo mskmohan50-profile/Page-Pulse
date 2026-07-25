@@ -1,8 +1,10 @@
 import { useState, useRef, FormEvent } from "react";
 import { Search, Loader2, AlertCircle, Activity, Bold } from "lucide-react";
 import { AuditReport } from "@/types";
-const AUDIT_URL = 'http://localhost:3000/audit';
-import ReportCard from "./components/ReportCard";
+const AUDIT_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://page-pulse-3-d5y6.onrender.com/audit";
+import ReportCard from "./componts/ReportCard";
 
 const EXAMPLES = [
   "https://example.com",
@@ -147,10 +149,30 @@ export default function App() {
       </main>
 
       <footer className="border-t border-white/10 px-6 py-5 text-center text-xs text-slate-500">
-        Built for{" "}
-        {" "}
-         Page Pulse audits any public URL and returns an instant SEO &amp; performance report.
-      </footer>
+  <p>
+    Built for{" "}
+    <a
+      href="https://digitalheroesco.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-cyan-400 hover:text-cyan-300 underline"
+    >
+      Digital Heroes Training Task
+    </a>
+  </p>
+
+  <p className="mt-2">
+    Live Demo:{" "}
+    <a
+      href="https://page-pulse-black-seven.vercel.app/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-cyan-400 hover:text-cyan-300 underline"
+    >
+      https://page-pulse-black-seven.vercel.app/
+    </a>
+  </p>
+</footer>
     </div>
   );
 }
